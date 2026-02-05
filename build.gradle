@@ -6,26 +6,28 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
+    maven { url = 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'org.codehaus.groovy:groovy:3.0.25'
-    testImplementation('org.spockframework:spock-core:2.4-groovy-2.5')
+    implementation 'org.apache.groovy:groovy:4.0.29'
+ 
+    testImplementation('org.spockframework:spock-core:2.4-groovy-4.0')
 }
 
-group = 'io.netifi'
+group = 'dev.donutquine'
 version = '1.0.7'
 
-pluginBundle {
-    website = 'https://github.com/netifi/gradle-flatbuffers-plugin'
-    vcsUrl = 'https://github.com/netifi/gradle-flatbuffers-plugin'
-    tags = [ 'serialization', 'build', 'codegen' ]
+gradlePlugin {
+    website = 'https://github.com/danila-schelkov/gradle-flatbuffers-plugin'
+    vcsUrl = 'https://github.com/danila-schelkov/gradle-flatbuffers-plugin'
 
     plugins {
         flatBuffersPlugin {
             description = "Gradle plugin for generating code from Google FlatBuffers schemas."
             displayName = 'FlatBuffers Plugin'
+            tags = [ 'serialization', 'build', 'codegen' ]
         }
     }
 }
@@ -33,19 +35,18 @@ pluginBundle {
 gradlePlugin {
     plugins {
         flatBuffersPlugin {
-            id = 'io.netifi.flatbuffers'
+            id = 'dev.donutquine.flatbuffers'
             implementationClass = 'io.netifi.flatbuffers.plugin.FlatBuffersPlugin'
         }
     }
 }
 
 license {
-    header rootProject.file('codequality/HEADER')
-    strictCheck true
+    header = rootProject.file('codequality/HEADER')
+    strictCheck = true
     excludes([ "**/*.json", "**/*.html", "**/*.js" ])
 }
 
-wrapper {
-    gradleVersion = '6.2.2'
-    distributionType = Wrapper.DistributionType.ALL
+tasks.withType(AbstractTestTask).configureEach {
+    failOnNoDiscoveredTests = false
 }

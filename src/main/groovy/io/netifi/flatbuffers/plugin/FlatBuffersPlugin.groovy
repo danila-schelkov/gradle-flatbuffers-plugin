@@ -22,11 +22,10 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.BasePlugin
-import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.Delete
 import org.gradle.api.tasks.SourceSet
 import org.gradle.plugins.ide.idea.model.IdeaModel
-import org.gradle.util.GUtil
 
 import static org.gradle.api.plugins.JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME
 
@@ -66,7 +65,7 @@ class FlatBuffersPlugin implements Plugin<Project> {
      * @param flatBuffersTask {@link FlatBuffers} flatBuffers
      */
     void addCleanTask(FlatBuffers flatBuffersTask) {
-        def taskName = "clean${GUtil.toCamelCase(flatBuffersTask.name)}"
+        def taskName = "clean${flatBuffersTask.name.capitalize()}"
         project.tasks.create(name: taskName, type: Delete) { Delete task ->
             task.delete flatBuffersTask.outputDir
         }
@@ -79,7 +78,7 @@ class FlatBuffersPlugin implements Plugin<Project> {
      */
     void applySourceSets(FlatBuffers task) {
         project.pluginManager.withPlugin('java') {
-            def javaPlugin = project.convention.getPlugin(JavaPluginConvention)
+            def javaPlugin = project.extensions.getByType(JavaPluginExtension)
             def sourceSets = javaPlugin.sourceSets
             sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).java { SourceDirectorySet java ->
                 java.srcDirs task.inputDir, task.outputDir

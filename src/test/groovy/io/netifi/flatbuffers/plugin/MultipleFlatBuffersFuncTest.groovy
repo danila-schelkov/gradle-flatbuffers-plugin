@@ -16,16 +16,14 @@
 package io.netifi.flatbuffers.plugin
 
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
+import spock.lang.TempDir
 
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
 class MultipleFlatBuffersFuncTest extends Specification {
-
-    @Rule
-    final TemporaryFolder testProjectDir = new TemporaryFolder()
+    @TempDir
+    File testProjectDir
 
     File buildFile
 
@@ -61,7 +59,7 @@ class MultipleFlatBuffersFuncTest extends Specification {
             plugins {
                 id 'idea'
                 id 'java'
-                id 'io.netifi.flatbuffers'
+                id 'dev.donutquine.flatbuffers'
             }
             
             flatbuffers {

@@ -1,5 +1,4 @@
 # gradle-flatbuffers-plugin
-[![Build Status](https://travis-ci.org/gregwhitaker/gradle-flatbuffers-plugin.svg?branch=master)](https://travis-ci.org/gregwhitaker/gradle-flatbuffers-plugin)
 
 Gradle plugin for generating code from Google [FlatBuffers](https://google.github.io/flatbuffers/) schemas.
 
@@ -10,7 +9,7 @@ This plugin requires that the FlatBuffers compiler be installed on the system.
 For information on building and installing the compiler please refer to the [FlatBuffers Documentation](https://google.github.io/flatbuffers/flatbuffers_guide_building.html).
 
 ## Usage
-Please see the [Gradle Plugin Portal](https://plugins.gradle.org/plugin/io.netifi.flatbuffers) for instructions on including this plugin in your project.
+Please see the [Gradle Plugin Portal](https://plugins.gradle.org/plugin/dev.donutquine.flatbuffers) for instructions on including this plugin in your project.
 
 ### Extension Properties
 The plugin defines the following extension properties in the `flatbuffers` closure:
@@ -74,7 +73,7 @@ This example generates Java FlatBuffers from the schema files in the default `sr
     import io.netifi.flatbuffers.plugin.tasks.FlatBuffers
     
     plugins {
-      id "io.netifi.flatbuffers" version "1.0.6"
+      id "dev.donutquine.flatbuffers" version "1.0.6"
     }
 
     flatbuffers {
@@ -88,7 +87,7 @@ This example generates Java FlatBuffers from the schema files in the default `sr
 ```
 
 ## Bugs and Feedback
-For bugs, questions, and discussions please use the [Github Issues](https://github.com/netifi/gradle-flatbuffers-plugin/issues).
+For bugs, questions, and discussions please use the [Github Issues](https://github.com/danila-schelkov/gradle-flatbuffers-plugin/issues).
 
 ## License
 Copyright 2020 Original Authors

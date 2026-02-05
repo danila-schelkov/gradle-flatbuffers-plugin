@@ -24,6 +24,10 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 import org.gradle.execution.commandline.TaskConfigurationException
 import org.gradle.process.ExecSpec
+import org.gradle.process.ExecOperations
+import org.gradle.api.Action
+import javax.inject.Inject
+import org.gradle.process.ExecResult
 import org.gradle.process.internal.ExecException
 
 @CompileStatic
@@ -44,30 +48,41 @@ class FlatBuffers extends DefaultTask {
     @Optional
     String extraArgs = ""
 
+    private final ExecOperations execOperations
+
+    @Inject
+    FlatBuffers(ExecOperations execOperations) {
+        this.execOperations = execOperations
+    }
+
     @TaskAction
     void run() {
         createOutputDir()
 
-        def flatcPath = getFlatcPath()
+        String flatcPath = getFlatcPath()
 
         getSchemas().each { File schema ->
-            println "Compiling: '$schema.absolutePath'"
+            logger.lifecycle("Compiling: '{}'", schema.absolutePath)
 
             try {
-                project.exec { ExecSpec spec ->
-                    spec.executable flatcPath
-                    spec.args "--$language"
-                    if (outputDir) {
-                        spec.args '-o', "$outputDir.absolutePath"
-                    }
-                    if (extraArgs) {
-                        spec.args extraArgs.split()
-                    }
-                    spec.args "$schema.absolutePath"
-                    spec.workingDir(project.projectDir)
+                execOperations.exec(new Action<ExecSpec>() {
+                    @Override
+                    void execute(ExecSpec spec) {
+                        spec.executable(flatcPath)
+                        spec.args("--${language}")
 
-                    logger.debug("Running command: '${spec.commandLine.join(' ')}'")
-                }.assertNormalExitValue()
+                        if (outputDir != null) {
+                            spec.args("-o", outputDir.absolutePath)
+                        }
+
+                        if (extraArgs != null && !extraArgs.isEmpty()) {
+                            spec.args(extraArgs.split())
+                        }
+
+                        spec.args(schema.absolutePath)
+                        spec.workingDir(project.projectDir)
+                    }
+                }).assertNormalExitValue()
 
             } catch (ExecException e) {
                 throw new TaskExecutionException(this, e)
@@ -115,12 +130,14 @@ class FlatBuffers extends DefaultTask {
      * @return a list of all schema files to compile
      */
     private List<File> getSchemas() {
-        def schemas = []
-        getInputDir().eachFileRecurse(FileType.FILES) { file ->
+        List<File> schemas = new ArrayList<>()
+
+        getInputDir().eachFileRecurse(FileType.FILES) { File file ->
             if (file.name ==~ /^.*\.fbs$/) {
-                schemas << file
+                schemas.add(file)
             }
         }
+
         return schemas
     }
 

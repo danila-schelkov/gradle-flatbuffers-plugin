@@ -17,9 +17,8 @@
 package io.netifi.flatbuffers.plugin
 
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import spock.lang.IgnoreIf
+import spock.lang.TempDir
 import spock.lang.Requires
 import spock.lang.Specification
 
@@ -30,10 +29,8 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 @IgnoreIf({ env.TRAVIS || env.CI })
 @Requires({ os.linux })
 class FlatcExecutableFromPathTest extends Specification {
-
-    @Rule
-    final TemporaryFolder testProjectDir = new TemporaryFolder()
-
+    @TempDir
+    File testProjectDir
 
     File buildFile
     File outputDir
@@ -57,7 +54,7 @@ class FlatcExecutableFromPathTest extends Specification {
 
             plugins {
                 id 'java'
-                id 'io.netifi.flatbuffers'
+                id 'dev.donutquine.flatbuffers'
             }
             
             flatbuffers {
