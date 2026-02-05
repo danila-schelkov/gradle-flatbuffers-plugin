@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.codehaus.groovy:groovy:2.5.8'
+    implementation 'org.codehaus.groovy:groovy:3.0.25'
     testImplementation('org.spockframework:spock-core:2.4-groovy-2.5')
 }
 
